@@ -1,0 +1,17 @@
+embedding:
+  model_name: "cointegrated/rubert-tiny2"
+  device: "cpu"
+
+vector_db:
+  type: "qdrant"
+  client_params:
+    host: "qdrant"
+    port: 6333
+    prefer_grpc: false
+    timeout: 30.0
+  collection_name: "test_wiki_paragraphs_docker"
+
+data:
+  input_file: "test.json"
+  auto_confirm_duplicates: True
+  batch_size: 10

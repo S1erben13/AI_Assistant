@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.7.4
+    container_name: ai_assistant_vector_db
+    hostname: qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+  processor:
+    build: .
+    container_name: ai_assistant_embedding_processor
+    command: "python -m pytest tests/ && sleep 20 && python load_vector_db.py"
+    depends_on:
+      - qdrant
+    volumes:
+      - ./configs:/app/configs
+      - ./data:/app/data
+      - .:/app
+    environment:
+      - DOCKER_MODE=true
+
+volumes:
+  qdrant_data:
